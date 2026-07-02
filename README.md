@@ -38,7 +38,7 @@ Data was gathered from the public dataset: [Fitbit Tracker Data via Kaggle](http
 
 ### Data Cleaning Log
 1.  **`dailyActivity_merged` Verification:** Checked for structural anomalies. Zero duplicate rows found. Standardized character dates into true Date-formatted entities. Flagged tracking days where recorded logged minutes fell short of a full 1440-minute window. Investigated step count outliers.
-2.  **`minuteSleep_merged` Sanitation:** Located and purged **525 duplicate records**. Isolated clean calendar dates from combined timestamp variables. Verified structural integrity and blank entries. Confirmed data capture over 23 unique user IDs.
+2.  **`minuteSleep_merged` Sanitation:** Located and purged **525 duplicate records**. Isolated clean calendar dates from combined timestamp variables. Verified structural integrity and blank entries. Confirmed data capture over 23 unique user IDs.  
 (The above cleaning steps mentioned are performed in MS Excel 2019)
 
 ### Setting Up the Environment
