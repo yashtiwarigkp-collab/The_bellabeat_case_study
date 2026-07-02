@@ -1,5 +1,8 @@
 # The Bellabeat Case Study
 Google Data Analytics Capstone Case Study tracking physical activity and sleep metrics to optimize product strategy.
+
+---
+
 ## Project Overview
 
 Welcome to my data analysis capstone project featuring **The Bellabeat Case Study**. Bellabeat is a high-tech manufacturer of health-focused smart products engineered specifically for women. In this case study, I adopt the role of a junior data analyst working within Bellabeat's marketing analytics team to analyze consumer trends in smart device usage. This report has **5 Phases**, mentioning the different stages in Data Analysis.
