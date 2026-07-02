@@ -28,7 +28,7 @@ To identify consumer trends in smart device usage from non-Bellabeat users (Fitb
 Data was gathered from the public dataset: [Fitbit Tracker Data via Kaggle](https://www.kaggle.com/datasets/arashnic/fitbit). This open data contains tracking logs from 30 eligible Fitbit users who consented to submit personal tracker data, including minute-level physical activity, heart rate, and sleep metrics.
 
 #### Critical Data Limitations
-⚠️ **Important Analytical Disconnect:** The Fitbit dataset tracks 30 random users with **no provided gender demographics**. Because Bellabeat specifically engineers health-focused smart products for women, treating these calorie burns or step distances as a perfect 1:1 behavioral blueprint presents fundamental limitations. On average, men exhibit higher basal metabolic rates (BMR) and longer average stride lengths. 
+**Important Analytical Disconnect:** The Fitbit dataset tracks 30 random users with **no provided gender demographics**. Because Bellabeat specifically engineers health-focused smart products for women, treating these calorie burns or step distances as a perfect 1:1 behavioral blueprint presents fundamental limitations. On average, men exhibit higher basal metabolic rates (BMR) and longer average stride lengths. 
  
 *Conclusion:* *While this public dataset serves as a useful proxy for general human device interaction and user adherence, our strategic findings must be validated against native, internal Bellabeat female user metrics prior to executing high-cost marketing workflows.*
 
