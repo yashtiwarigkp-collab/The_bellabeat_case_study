@@ -125,6 +125,8 @@ library(ggplot2)
 ggplot(data = daily_activity, mapping = aes(x = TotalSteps, y = Calories)) + geom_point() + geom_smooth() + labs(title =  "Daily Activity: Total Steps vs. Calories Burned", x = "Total Daily Steps", y = "Calories_Burned", caption = "Data Source : Fitbit Tracker Data via Kaggle")
 ```
 
+![Steps vs Calories Burned](04_Visualizations/01_steps_vs_calories.png)
+
 As expected, we observe a steady positive correlation. This baseline layout establishes the expected physical performance curves for tracking devices.
 
 ### Deep Dive: Sedentary Behavior vs. Sleep Quality
