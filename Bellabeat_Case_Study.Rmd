@@ -1,0 +1,194 @@
+---
+title: 'The Bellbeat Case Study: How can a wellness company play it smart?'
+author: "Yash Tiwari"
+date: "2026-07-02"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+## Phase 1: Ask  
+
+### Business Task
+To identify consumer trends in smart device usage from non-Bellabeat users (Fitbit data) to help optimize and guide Bellabeat's marketing and product development strategy.
+
+### Key Stakeholders
+*   **Urška Sršen** – Chief Creative Officer & Co-founder
+*   **Sando Mur** – Mathematician & Co-founder
+*   **Bellabeat Marketing Analytics Team**
+
+---
+
+## Phase 2: Prepare
+### Data Source: 
+Data was gathered from the public dataset: [Fitbit Tracker Data via Kaggle](https://www.kaggle.com/datasets/arashnic/fitbit). This open data contains tracking logs from 30 eligible Fitbit users who consented to submit personal tracker data, including minute-level physical activity, heart rate, and sleep metrics.
+
+### Critical Data Limitations
+⚠️ **Important Analytical Disconnect:** The Fitbit dataset tracks 30 random users with **no provided gender demographics**. Because Bellabeat specifically engineers health-focused smart products for women, treating these calorie burns or step distances as a perfect 1:1 behavioral blueprint presents fundamental limitations. On average, men exhibit higher basal metabolic rates (BMR) and longer average stride lengths. 
+ 
+*Conclusion:* While this public dataset serves as a useful proxy for general human device interaction and user adherence, our strategic findings must be validated against native, internal Bellabeat female user metrics prior to executing high-cost marketing workflows.
+
+---
+
+## Phase 3: Process
+
+### Data Cleaning Log
+1.  **`dailyActivity_merged` Verification:** Checked for structural anomalies. Zero duplicate rows found. Standardized character dates into true Date-formatted entities. Flagged tracking days where recorded logged minutes fell short of a full 1440-minute window. Investigated step count outliers.
+2.  **`minuteSleep_merged` Sanitation:** Located and purged **525 duplicate records**. Isolated clean calendar dates from combined timestamp variables. Verified structural integrity and blank entries. Confirmed data capture over 23 unique user IDs.
+
+### Setting Up the Environment
+
+```{r}
+library(tidyverse)
+library(readr)
+library(janitor)
+# Load local cleaned datasets
+daily_activity <- read.csv("02_Cleaned_data/dailyActivity_merged_clean.csv")
+daily_sleep <- read.csv("02_Cleaned_data/dailySleep_Summary.csv")
+```
+
+### Data Merging
+
+To evaluate dependencies between daytime habits and subsequent sleep duration, datasets were combined via an inner join. This resulted in an intersection of 199 completed observations containing concurrent daily movement and sleep logs.
+
+```{r}
+# Column name standardization and merging
+daily_activity_clean <- daily_activity %>% clean_names()
+daily_sleep_clean <- daily_sleep %>% clean_names()
+
+# Merging & Saving
+
+merged_data <- daily_activity_clean %>% inner_join(daily_sleep_clean, by = c("id" = "id", "activity_date" = "sleep_date" ))
+write.csv(merged_data, "02_Cleaned_data/Daily_activity_sleeep_merged.csv")
+```
+
+---
+
+## Phase 4: Analyze & Visualize
+
+### Daily Activity Profile Breakdown
+
+We analyzed consumer intensity distribution baselines across tracking records to map active vs. sedentary lifestyles:
+
+```{r}
+activity_summary_table <- daily_activity %>% summarise(average_very_active_minutes = mean(VeryActiveMinutes), average_fairly_active_minutes = mean(FairlyActiveMinutes), average_lightly_active_minutes = mean(LightlyActiveMinutes), average_sedantry_minutes = mean(SedentaryMinutes))
+
+knitr::kable(activity_summary_table, caption = "Average Minutes Spent by Intensity Levels")
+```
+
+---
+
+* **The Inactivity Epidemic:** Users averaged 995.28 sedentary minutes a day. This amounts to roughly 16.6 hours of daytime sitting or physical inactivity, revealing a major behavioral risk and marketing angle.
+
+* **The Active Deficit:** Users logged a mere 16.6 minutes of very active exertion daily.
+
+* **Weekday vs. Weekend Check:** Grouping by day-of-week types yielded no significant differences in activity baselines across the calendar week.
+
+Code for grouping by Weekend and Weekday
+
+```{r}
+library(lubridate)
+daily_activity_days <- daily_activity %>% mutate(ActivityDate = mdy(ActivityDate), day_of_week = weekdays(ActivityDate), day_type = if_else(day_of_week %in% c("Saturday", "Sunday"),"Weekend", "Weekday"))
+
+daily_activity_days_summary <- daily_activity_days %>% group_by(day_type) %>% summarise(average_very_active_minutes = mean(VeryActiveMinutes), average_fairly_active_minutes = mean(FairlyActiveMinutes), average_lightly_active_minutes = mean(LightlyActiveMinutes), average_sedentary_minutes = mean(SedentaryMinutes))
+write.csv(daily_activity_days_summary,"activity_summary_table_weekday_vs_weekend.csv")
+knitr::kable(daily_activity_days_summary, caption = "Average Minutes Spent by Intensity Levels: Weekdays vs Weekends")
+```
+
+---
+
+### Relationship Analysis: Movement vs. Energy Output
+
+To assess general database validation, we visualized the relationship between Total Steps and Calories.
+
+```{r}
+# Calculating Overall Average Steps and Calories In a Day
+
+Average_steps_calories <- daily_activity %>% summarise(average_total_steps = mean(TotalSteps), average_calories_burned = mean(Calories))
+write.csv(Average_steps_calories, "overall_average_of_total_steps_and_calories.csv")
+
+knitr::kable(Average_steps_calories, caption = "Average Steps & Average Calories Burned In a Day")
+
+```
+
+---
+
+```{r}
+# Making a Plot To See Relationship Between Total Steps And Total Calories Burned In a Day
+
+library(ggplot2)
+ggplot(data = daily_activity, mapping = aes(x = TotalSteps, y = Calories)) + geom_point() + geom_smooth() + labs(title =  "Daily Activity: Total Steps vs. Calories Burned", x = "Total Daily Steps", y = "Calories_Burned", caption = "Data Source : Fitbit Tracker Data via Kaggle")
+```
+
+As expected, we observe a steady positive correlation. This baseline layout establishes the expected physical performance curves for tracking devices.
+
+### Deep Dive: Sedentary Behavior vs. Sleep Quality
+
+By querying the 199 intersecting records in our joined table, we evaluated how extensive daytime sitting impacts night rest (total_minutes_asleep mean: **468.2 minutes / ~7.8 hours)**.
+
+```{r}
+ggplot(data = merged_data, mapping = aes(x = sedentary_minutes, y = total_minutes_asleep)) + geom_point(color = "darkblue") + geom_smooth(color = "red") + labs(title = "Does Sitting All Day Effect Sleep?", x = "Sedentary Minutes", y = "Total Minutes Asleep", caption = "Data Source : Fitbit Tracker Data via Kaggle")
+```
+
+* **Insight:** The curve displays a distinct non-linear shape. A modest wind-down window (~400-500 sedentary minutes) maintains stable sleep thresholds. However, as sedentary timelines scale further into the day, sleep minutes experience a sharp, continuous downward trajectory. **Excessive prolonged physical inactivity directly degrades sleep duration**.
+
+### Deep Dive: High Step Counts vs. Sleep Quality
+
+Next, I evaluated whether hitting high step milestones yields compound positive returns on nighttime rest.
+
+```{r}
+ggplot(data = merged_data, mapping = aes(x = total_steps, y = total_minutes_asleep)) + geom_point(color = "blue") + geom_smooth(color = "green") + labs(title = "Do More Daily Steps Lead to Better Sleep", x = "Total Steps", y = "Total Minutes Asleep", caption = "Data Source : Fitbit Tracker Data via Kaggle")
+```
+
+
+* **Insight:** Sleep output tracks along a flat, uniform plateau (7.5 to 8 hours) between 2,500 and 12,500 daily steps. However, as extreme step thresholds cross over 13,000 steps, sleep duration begins to systematically decline. This unexpected drop suggests physical overexertion, system strain, or late-night workouts that disrupt sleep homeostasis.
+
+## Phase 5: Share & Act
+
+### Data-Driven Recommendations for Bellabeat
+
+Based on the tracking trends uncovered in this case study, here are the actionable insights to refine the Bellabeat app and marketing strategy:
+
+#### Introduce Proactive Daytime Haptic Prompts: 
+
+Given that users average an alarming 16.6 hours of sedentary time, the Bellabeat app should introduce personalized "Time to Re-energize" alerts when continuous stillness hits a 90-minute limit, preventing sleep-disrupting sedentary accumulation.
+
+#### Reposition Marketing to Reflect Consistency Over Intensity:
+
+Shift user acquisition messaging away from grueling workout routines. Leverage the step-vs-sleep plateau to promote an attainable "Healthy Sweet Spot" goal (8,000–10,000 steps), proving that optimal sleep health relies on sustainable routines rather than exhaustive physical stress.
+
+#### Deploy Smart "Recovery Night" App Prompts: 
+
+When a user registers a high-exertion day over 13,000 steps, trigger automatic evening advice reminding them to focus on hydration, wind down 30 minutes earlier, and engage in stretching to preserve deep sleep stability.
+
+---
+
+## Phase 6: Next Steps & Future Research Requests
+
+To validate our findings and maximize the business value of this analysis, we officially request a broader, more tailored data provisioning pipeline for future iterations of this project.
+
+### 1. Native Bellabeat Customer Data
+* **The Goal:** Transition away from third-party Fitbit proxies. 
+* **The Rationale:** To truly optimize marketing strategies, we need to analyze user tracking logs directly from current Bellabeat product ecosystems (such as the *Leaf* wellness tracker, *Time* watch, or *Spring* water bottle). This ensures behavioral data perfectly mirrors our actual consumer demographic and app interface engagement.
+
+### 2. Gender-Demographic Stratified Data
+* **The Goal:** Acquire datasets containing verified user gender identity, age cohorts, and physical baselines.
+* **The Rationale:** As established in our data limitations, physiological differences (such as basal metabolic rates and average stride lengths) significantly impact caloric calculations and distance tracking accuracy. Expanding data collection to include explicit female-stratified demographics will allow our models to establish an accurate biological baseline for Bellabeat's target audience.
+
+---
+
+### Technical Appendix & Session Info
+
+For reproducibility purposes, the data analysis was conducted using **RStudio** and the core **Tidyverse** ecosystem.
+
+---
+
+
+
+
+
+
+
+
+
+
