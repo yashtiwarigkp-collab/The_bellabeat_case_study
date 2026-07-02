@@ -137,6 +137,8 @@ By querying the 199 intersecting records in our joined table, we evaluated how e
 ggplot(data = merged_data, mapping = aes(x = sedentary_minutes, y = total_minutes_asleep)) + geom_point(color = "darkblue") + geom_smooth(color = "red") + labs(title = "Does Sitting All Day Effect Sleep?", x = "Sedentary Minutes", y = "Total Minutes Asleep", caption = "Data Source : Fitbit Tracker Data via Kaggle")
 ```
 
+![Sedentary Minutes vs Sleep Minutes](04_Visualizations/totalminutesasleep_vs_sedentary_minutes.png)
+
 * **Insight:** The curve displays a distinct non-linear shape. A modest wind-down window (~400-500 sedentary minutes) maintains stable sleep thresholds. However, as sedentary timelines scale further into the day, sleep minutes experience a sharp, continuous downward trajectory. **Excessive prolonged physical inactivity directly degrades sleep duration**.
 
 ### Deep Dive: High Step Counts vs. Sleep Quality
@@ -146,6 +148,8 @@ Next, I evaluated whether hitting high step milestones yields compound positive 
 ```{r}
 ggplot(data = merged_data, mapping = aes(x = total_steps, y = total_minutes_asleep)) + geom_point(color = "blue") + geom_smooth(color = "green") + labs(title = "Do More Daily Steps Lead to Better Sleep", x = "Total Steps", y = "Total Minutes Asleep", caption = "Data Source : Fitbit Tracker Data via Kaggle")
 ```
+
+![Total Steps vs Minutes Asleep](04_Visualizations/totalsteps_vs_minutes_asleep.png)
 
 
 * **Insight:** Sleep output tracks along a flat, uniform plateau (7.5 to 8 hours) between 2,500 and 12,500 daily steps. However, as extreme step thresholds cross over 13,000 steps, sleep duration begins to systematically decline. This unexpected drop suggests physical overexertion, system strain, or late-night workouts that disrupt sleep homeostasis.
