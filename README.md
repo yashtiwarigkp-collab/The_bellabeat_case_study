@@ -190,11 +190,16 @@ To validate our findings and maximize the business value of this analysis, we of
 ---
 
 ### Technical Appendix & Session Info
-
 For reproducibility purposes, the data analysis was conducted using **RStudio** and the core **Tidyverse** ecosystem.
 
 ---
 
+## Contact & Professional Links
+Thank you for reviewing my Bellabeat Case Study! Feel free to connect or reach out if you have any questions regarding my methodologies or insights.
+
+* **Author Name:** Yash Tiwari
+* **Professional Email:** yashtiwarigkp@gmail.com
+* **LinkedIn:** [linkedin.com/in/yash-tiwari-52601120a](https://www.linkedin.com/in/yash-tiwari-52601120a)
 
 
 
