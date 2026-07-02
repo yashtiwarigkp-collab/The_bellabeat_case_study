@@ -1,5 +1,5 @@
-# The Bellabeat Case Study
-Google Data Analytics Capstone Case Study tracking physical activity and sleep metrics to optimize product strategy.
+# The Bellabeat Case Study: How can a wellness company play it smart?
+**Google Data Analytics Capstone Case Study tracking physical activity and sleep metrics to optimize product strategy.**
 
 ---
 
